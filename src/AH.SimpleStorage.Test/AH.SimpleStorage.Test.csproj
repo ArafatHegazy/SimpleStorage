@@ -7,8 +7,8 @@
     <ProjectGuid>{B6B81B69-C626-469E-8C8A-4F2C41B2BDF0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleStorage.Test</RootNamespace>
-    <AssemblyName>SimpleStorage.Test</AssemblyName>
+    <RootNamespace>AH.SimpleStorage.Test</RootNamespace>
+    <AssemblyName>AH.SimpleStorage.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -55,9 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleStorage\SimpleStorage.csproj">
+    <ProjectReference Include="..\AH.SimpleStorage\AH.SimpleStorage.csproj">
       <Project>{B04BB404-9061-4FDE-810A-92E5844D3631}</Project>
-      <Name>SimpleStorage</Name>
+      <Name>AH.SimpleStorage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleStorage", "SimpleStorage\SimpleStorage.csproj", "{B04BB404-9061-4FDE-810A-92E5844D3631}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AH.SimpleStorage", "AH.SimpleStorage\AH.SimpleStorage.csproj", "{B04BB404-9061-4FDE-810A-92E5844D3631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleStorage.Test", "SimpleStorage.Test\SimpleStorage.Test.csproj", "{B6B81B69-C626-469E-8C8A-4F2C41B2BDF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AH.SimpleStorage.Test", "AH.SimpleStorage.Test\AH.SimpleStorage.Test.csproj", "{B6B81B69-C626-469E-8C8A-4F2C41B2BDF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

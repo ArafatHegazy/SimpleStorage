@@ -7,8 +7,8 @@
     <ProjectGuid>{B04BB404-9061-4FDE-810A-92E5844D3631}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleStorage</RootNamespace>
-    <AssemblyName>SimpleStorage</AssemblyName>
+    <RootNamespace>AH.SimpleStorage</RootNamespace>
+    <AssemblyName>AH.SimpleStorage</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

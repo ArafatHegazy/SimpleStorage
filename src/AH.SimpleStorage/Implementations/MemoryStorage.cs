@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SimpleStorage.Implementations
+namespace AH.SimpleStorage.Implementations
 {
+    /// <summary>
+    /// An implementation of the IStorage that provides memory file operations. It is very useful in unit testins.
+    /// </summary>
     public class MemoryStorage : IStorage
     {
-        public DirectoryNode BaseDirectory = new DirectoryNode();
+        protected DirectoryNode _baseDirectory = new DirectoryNode();
+
+        public DirectoryNode BaseDirectory => _baseDirectory;
 
         public MemoryStorage(string baseFolderName)
         {
@@ -34,13 +39,13 @@ namespace SimpleStorage.Implementations
             return folder.GetDirecotries();
         }
 
-        public string ReadFromFile(string fileName)
+        public string ReadTextFromFile(string fileName)
         {
             var file = BaseDirectory.GetFile(fileName);
             return file.Content;
         }
 
-        public void WriteToFile(string fileName, string content)
+        public void WriteTextToFile(string fileName, string content)
         {
             var file = BaseDirectory.GetFile(fileName);
             if (file == null)

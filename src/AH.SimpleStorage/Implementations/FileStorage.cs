@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace SimpleStorage.Implementations
+namespace AH.SimpleStorage.Implementations
 {
     public class FileStorage : IStorage
     {
@@ -26,12 +26,12 @@ namespace SimpleStorage.Implementations
             return Directory.GetDirectories(directoryName).ToList();
         }
 
-        public string ReadFromFile(string fileName)
+        public string ReadTextFromFile(string fileName)
         {
             return File.ReadAllText(fileName);
         }
 
-        public void WriteToFile(string fileName, string content)
+        public void WriteTextToFile(string fileName, string content)
         {
             File.WriteAllText(fileName, content);
         }
