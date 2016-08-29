@@ -1,5 +1,4 @@
 # Simple Storage
-[![Build status](https://ci.appveyor.com/api/projects/status/4nwdygqvlesfwr9b?svg=true)](https://ci.appveyor.com/project/ArafatHegazy/simplestorage)
 
 Simple storage library provides simple file operations which is easy to unit test and mock. The library is simple and effective. It provides the basic operations that you need to handle files. For now it is limited to text files. Extensions will be added in the future.
 
