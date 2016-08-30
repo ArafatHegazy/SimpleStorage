@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Implementations\FileStorage.cs" />
+    <Compile Include="Implementations\MemoryStreamWriter.cs" />
     <Compile Include="IStorage.cs" />
     <Compile Include="Implementations\MemoryStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

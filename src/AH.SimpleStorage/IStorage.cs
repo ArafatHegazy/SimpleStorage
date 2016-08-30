@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace AH.SimpleStorage
 {
@@ -40,5 +41,19 @@ namespace AH.SimpleStorage
         /// <param name="fileName">The taregt file name</param>
         /// <param name="content">The text fontent</param>
         void WriteTextToFile(string fileName, string content);
+
+        /// <summary>
+        /// Returns a stream from a file.
+        /// </summary>
+        /// <param name="fileName">The file name contains the full path</param>
+        /// <returns>Stream from file</returns>
+        StreamReader ReadStreamFromFile(string fileName);
+
+        /// <summary>
+        /// Returns a stream from a file.
+        /// </summary>
+        /// <param name="fileName">The file name contains the full path</param>
+        /// <returns>Stream from file</returns>
+        StreamWriter WriteStreamFromFile(string fileName);
     }
 }

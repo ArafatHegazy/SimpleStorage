@@ -35,5 +35,16 @@ namespace AH.SimpleStorage.Implementations
         {
             File.WriteAllText(fileName, content);
         }
+
+        public StreamReader ReadStreamFromFile(string fileName)
+        {
+            StreamReader stream = new StreamReader(fileName);
+            return stream;
+        }
+
+        public StreamWriter WriteStreamFromFile(string fileName)
+        {
+            return new StreamWriter(fileName);
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace AH.SimpleStorage.Implementations
 {
@@ -50,10 +52,27 @@ namespace AH.SimpleStorage.Implementations
             var file = BaseDirectory.GetFile(fileName);
             if (file == null)
             {
-                BaseDirectory.CreateFile(fileName);
-                file = BaseDirectory.GetFile(fileName);
+                file = BaseDirectory.CreateFile(fileName);
             }
             file.Content = content;
+        }
+
+        public StreamReader ReadStreamFromFile(string fileName)
+        {
+            var fileContent = ReadTextFromFile(fileName);
+            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(fileContent ?? ""));
+            StreamReader reader = new StreamReader(stream);
+            return reader;
+        }
+
+        public StreamWriter WriteStreamFromFile(string fileName)
+        {
+            var file = BaseDirectory.GetFile(fileName);
+            if (file == null)
+            {
+                file = BaseDirectory.CreateFile(fileName);
+            }
+            return new MemoryStreamWriter(file);
         }
     }
 
@@ -128,13 +147,15 @@ namespace AH.SimpleStorage.Implementations
             return (FileNode)parentDirecotry.Children.FirstOrDefault(c => c is FileNode && c.Name == path.Last());
         }
 
-        public void CreateFile(string fileName)
+        public FileNode CreateFile(string fileName)
         {
             var path = fileName.Split('\\');
             var parentDirectoryPath = path.ToList();
             parentDirectoryPath.Remove(parentDirectoryPath.Last());
             var parentDirecotry = GetDirecotry(parentDirectoryPath.ToArray());
-            parentDirecotry.Children.Add(new FileNode() { Name = path.Last(), FullPath = parentDirecotry.FullPath + "\\" + path.Last() });
+            var newFile = new FileNode() {Name = path.Last(), FullPath = parentDirecotry.FullPath + "\\" + path.Last()};
+            parentDirecotry.Children.Add(newFile);
+            return newFile;
         }
     }
 
