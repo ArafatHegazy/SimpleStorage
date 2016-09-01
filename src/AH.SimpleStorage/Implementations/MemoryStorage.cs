@@ -20,13 +20,14 @@ namespace AH.SimpleStorage.Implementations
             BaseDirectory.FullPath = baseFolderName;
         }
 
-        public void CreateDirectory(string directoryName)
+        public IStorage CreateDirectory(string directoryName)
         {
             var folder = BaseDirectory.GetDirecotry(directoryName);
             if (folder == null)
             {
                 BaseDirectory.CreateDirectory(directoryName);
             }
+            return this;
         }
 
         public List<string> GetFiles(string directoryName)
@@ -47,7 +48,7 @@ namespace AH.SimpleStorage.Implementations
             return file.Content;
         }
 
-        public void WriteTextToFile(string fileName, string content)
+        public IStorage WriteTextToFile(string fileName, string content)
         {
             var file = BaseDirectory.GetFile(fileName);
             if (file == null)
@@ -55,6 +56,7 @@ namespace AH.SimpleStorage.Implementations
                 file = BaseDirectory.CreateFile(fileName);
             }
             file.Content = content;
+            return this;
         }
 
         public StreamReader ReadStreamFromFile(string fileName)
@@ -74,7 +76,56 @@ namespace AH.SimpleStorage.Implementations
             }
             return new MemoryStreamWriter(file);
         }
+
+        public IStorage DeleteFile(string fileName)
+        {
+            var parentDirectory = BaseDirectory.GetParentDirectory(fileName);
+            var childName = BaseDirectory.RemovePath(fileName);
+            parentDirectory.RemoveChild(childName);
+            return this;
+        }
+
+        public IStorage DeleteDirectory(string directoryName)
+        {
+            var parentDirectory = BaseDirectory.GetParentDirectory(directoryName);
+            var child = BaseDirectory.RemovePath(directoryName);
+            parentDirectory.RemoveChild(child);
+            return this;
+        }
+
+        public IStorage RenameFile(string fileName, string newFileName)
+        {
+            return MoveFile(fileName, newFileName);
+        }
+
+        public IStorage RenameDirectory(string directoryName, string newDirectoryName)
+        {
+            return MoveDirectory(directoryName, newDirectoryName);
+        }
+
+        public IStorage MoveFile(string fileName, string newFileName)
+        {
+            var content = ReadTextFromFile(fileName);
+            DeleteFile(fileName);
+            WriteTextToFile(newFileName, content);
+            return this;
+        }
+
+        public IStorage MoveDirectory(string directoryName, string newDirectoryName)
+        {
+            var parentDirectory = BaseDirectory.GetParentDirectory(directoryName);
+            var childName = BaseDirectory.RemovePath(directoryName);
+            var child = parentDirectory.RemoveChild(childName);
+            child.Name = BaseDirectory.RemovePath(newDirectoryName);
+            var destinationParentDirecotry = BaseDirectory.GetParentDirectory(newDirectoryName);
+            destinationParentDirecotry.Children.Add(child);
+            ((DirectoryNode)child).FixPath(destinationParentDirecotry.FullPath);
+            return this;
+        }
     }
+
+
+
 
     public class Node
     {
@@ -96,6 +147,19 @@ namespace AH.SimpleStorage.Implementations
             return GetDirecotry(name.Split('\\'));
         }
 
+        public void FixPath(string parentPath)
+        {
+            FullPath = parentPath + "\\" + Name;
+            Children.ForEach(c =>
+            {
+                if (c is FileNode)
+                    c.FullPath = parentPath + "\\" + c.Name;
+                else
+                    ((DirectoryNode)c).FixPath(FullPath);
+            });
+        }
+
+
         public DirectoryNode GetDirecotry(string[] path)
         {
             var firstNode = path[0];
@@ -108,7 +172,8 @@ namespace AH.SimpleStorage.Implementations
             {
                 firstNode = path[1];
             }
-            DirectoryNode child = (DirectoryNode)Children.FirstOrDefault(c => c is DirectoryNode && c.Name == firstNode);
+            DirectoryNode child =
+                (DirectoryNode) Children.FirstOrDefault(c => c is DirectoryNode && c.Name == firstNode);
             if (child != null)
                 return child.GetDirecotry(path.Skip(1).ToArray());
             return null;
@@ -116,14 +181,31 @@ namespace AH.SimpleStorage.Implementations
 
         public void CreateDirectory(string directoryName)
         {
-            var path = directoryName.Split('\\');
-            var parentDirectoryPath = path.ToList();
-            parentDirectoryPath.Remove(parentDirectoryPath.Last());
-            var parentDirecotry = GetDirecotry(parentDirectoryPath.ToArray());
-            parentDirecotry.CreateDirecotry(path.Last());
+            DirectoryNode parentDirecotry = GetParentDirectory(directoryName);
+            parentDirecotry.CreateDirecotry(RemovePath(directoryName));
         }
 
-        private void CreateDirecotry(string directoryName)
+        public DirectoryNode GetParentDirectory(string name)
+        {
+            var parentDirecotry = GetDirecotry(GetPathList(name));
+            return parentDirecotry;
+        }
+
+        public string RemovePath(string fullName)
+        {
+            var path = fullName.Split('\\');
+            return path.Last();
+        }
+
+        public string[] GetPathList(string fullName)
+        {
+            var path = fullName.Split('\\');
+            var parentDirectoryPath = path.ToList();
+            parentDirectoryPath.Remove(parentDirectoryPath.Last());
+            return parentDirectoryPath.ToArray();
+        }
+
+        public void CreateDirecotry(string directoryName)
         {
             Children.Add(new DirectoryNode() {Name = directoryName, FullPath = this.FullPath + "\\" + directoryName});
         }
@@ -144,7 +226,7 @@ namespace AH.SimpleStorage.Implementations
             var parentDirectoryPath = path.ToList();
             parentDirectoryPath.Remove(parentDirectoryPath.Last());
             var parentDirecotry = GetDirecotry(parentDirectoryPath.ToArray());
-            return (FileNode)parentDirecotry.Children.FirstOrDefault(c => c is FileNode && c.Name == path.Last());
+            return (FileNode) parentDirecotry.Children.FirstOrDefault(c => c is FileNode && c.Name == path.Last());
         }
 
         public FileNode CreateFile(string fileName)
@@ -157,7 +239,17 @@ namespace AH.SimpleStorage.Implementations
             parentDirecotry.Children.Add(newFile);
             return newFile;
         }
+
+        public Node RemoveChild(string childName)
+        {
+            var element = GetChild(childName);
+            Children.Remove(element);
+            return element;
+        }
+
+        public Node GetChild(string childName)
+        {
+            return Children.First(c => c.Name == childName);
+        }
     }
-
-
 }

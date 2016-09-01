@@ -117,6 +117,87 @@ namespace AH.SimpleStorage.Test
             list[0].ShouldBe("File4 Line1File4 Line2");
         }
 
+        [Test]
+        public void DeleteFileTest()
+        {
+            var storage = CreateDefaultFilesStructure();
+            storage.DeleteFile("BASE_FOLDER\\File1");
+
+            storage.BaseDirectory.Children.Count.ShouldBe(5);
+            storage.BaseDirectory.Children[0].ShouldBeOfType<DirectoryNode>();
+            storage.BaseDirectory.Children[1].ShouldBeOfType<DirectoryNode>();
+            storage.BaseDirectory.Children[2].ShouldBeOfType<DirectoryNode>();
+            storage.BaseDirectory.Children[3].ShouldBeOfType<FileNode>();
+
+            ((FileNode)storage.BaseDirectory.Children[3]).Content.ShouldBe("File2 Content");
+
+            ((DirectoryNode)storage.BaseDirectory.Children[0]).Children.Count.ShouldBe(1);
+            ((DirectoryNode)storage.BaseDirectory.Children[1]).Children.Count.ShouldBe(3);
+            ((DirectoryNode)storage.BaseDirectory.Children[2]).Children.Count.ShouldBe(1);
+
+            storage.GetDirectories("BASE_FOLDER").Count.ShouldBe(3);
+            storage.GetFiles("BASE_FOLDER").Count.ShouldBe(2);
+
+            storage.ReadTextFromFile("BASE_FOLDER\\File2").ShouldBe("File2 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder1\\File11").ShouldBe("File11 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder2\\File21").ShouldBe("File21 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder2\\File22").ShouldBe("File22 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder2\\File23").ShouldBe("File23 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder3\\File31").ShouldBe("File31 Content");
+        }
+
+        [Test]
+        public void DeleteDirectoryTest()
+        {
+            var storage = CreateDefaultFilesStructure();
+            storage.DeleteFile("BASE_FOLDER\\Folder1");
+            storage.BaseDirectory.Children.Count.ShouldBe(5);
+        }
+
+        [Test]
+        public void RenameFileTest()
+        {
+            var storage = CreateDefaultFilesStructure();
+            storage.RenameFile("BASE_FOLDER\\File1", "BASE_FOLDER\\File555");
+            storage.BaseDirectory.Children.Count.ShouldBe(6);
+            storage.ReadTextFromFile("BASE_FOLDER\\File555").ShouldBe("File1 Content");
+        }
+
+        [Test]
+        public void RenameFileTestWithMove()
+        {
+            var storage = CreateDefaultFilesStructure();
+            storage.RenameFile("BASE_FOLDER\\File1", "BASE_FOLDER\\Folder1\\File555");
+            storage.BaseDirectory.Children.Count.ShouldBe(5);
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder1\\File555").ShouldBe("File1 Content");
+        }
+
+
+        [Test]
+        public void RenameDirectoryTest()
+        {
+            var storage = CreateDefaultFilesStructure();
+            storage.RenameDirectory("BASE_FOLDER\\Folder1", "BASE_FOLDER\\Folder111");
+            storage.BaseDirectory.Children.Count.ShouldBe(6);
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder111\\File11").ShouldBe("File11 Content");
+        }
+
+        [Test]
+        public void RenameDirectoryWithMoveTest()
+        {
+            var storage = CreateDefaultFilesStructure();
+            storage.RenameDirectory("BASE_FOLDER\\Folder2", "BASE_FOLDER\\Folder1\\Folder222");
+            storage.BaseDirectory.Children.Count.ShouldBe(5);
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder1\\File11").ShouldBe("File11 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder1\\Folder222\\File21").ShouldBe("File21 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder1\\Folder222\\File22").ShouldBe("File22 Content");
+
+            storage.RenameDirectory("BASE_FOLDER\\Folder1", "BASE_FOLDER\\Folder3\\Folder111");
+            storage.BaseDirectory.Children.Count.ShouldBe(4);
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder3\\Folder111\\File11").ShouldBe("File11 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder3\\Folder111\\Folder222\\File21").ShouldBe("File21 Content");
+            storage.ReadTextFromFile("BASE_FOLDER\\Folder3\\Folder111\\Folder222\\File22").ShouldBe("File22 Content");
+        }
 
         private List<string> readStream(StreamReader streamReader)
         {
@@ -127,6 +208,7 @@ namespace AH.SimpleStorage.Test
             }
             return list;
         }
+   
 
 
         private static MemoryStorage CreateDefaultFilesStructure()
